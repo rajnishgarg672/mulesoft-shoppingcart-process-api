@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="mulesoft-shoppingcart-process-api-config" api="mulesoft-shoppingcart-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="mulesoft-shoppingcart-process-api-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="mulesoft-shoppingcart-process-api-config" />
+    </flow>
+    <flow name="mulesoft-shoppingcart-process-api-console">
+        <http:listener path="/console/*" config-ref="HTTP_Listener_config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="mulesoft-shoppingcart-process-api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\shoppingCarts\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config">
+        <flow-ref doc:name="update shopping cart based on shoppingcartId" doc:id="3b55df38-7a9f-49ff-8e93-2ad62bb07756" name="updateShoppingCart" />
+    </flow>
+    <flow name="delete:\shoppingCarts\(shoppingCartId):mulesoft-shoppingcart-process-api-config">
+        <flow-ref doc:name="delete shopping cart" doc:id="742aa161-56da-45bf-b003-e13e25100b4a" name="deleteShoppingCart" />
+    </flow>
+    <flow name="post:\shoppingCarts:application\json:mulesoft-shoppingcart-process-api-config">
+        <flow-ref doc:name="create shopping cart for customer" doc:id="806d494b-f050-4d69-9c72-f4c71041eb92" name="createShoppingCart" />
+    </flow>
+    <flow name="post:\checkout\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config">
+        <flow-ref doc:name="checkout-implementation-logic" doc:id="d8d89f8c-ffd1-410b-b747-aadb55c0dc69" name="checkout-implementation-logic" />
+    </flow>
+</mule>

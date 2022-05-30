@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="checkout-implementation-logic" doc:id="f39a2745-293a-4f08-8dcc-c8aae49d1f38" >
+		<logger level="INFO" doc:name="Logger" doc:id="c0b32701-e0a7-4518-afbe-6de090c66ebc" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"tracepoint": "START",&#10;	"text":"process to checkout for given shopping cart is started,intiating the payment gateway process",&#10;	trackingId:correlationId&#10;}]'/>
+		<flow-ref doc:name="retrieveProperties" doc:id="0c29c830-c833-48c8-b396-086a729aa440" name="retrieveProperties" />
+		<logger level="INFO" doc:name="Logger" doc:id="580c3531-5e67-404f-880b-bab7268fa79d" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"tracepoint": "INTIALIZATION",&#10;	"text":"After storing the config properties in variables",&#10;	trackingId:correlationId&#10;}]'/>
+		<ee:transform doc:name="storing payload/uri in variables" doc:id="daa6ac14-7bf2-47d2-8622-d28a8c48b12b" >
+			<ee:variables >
+				<ee:set-variable variableName="shoppingCartId" ><![CDATA[attributes.uriParams.'shoppingCartId']]></ee:set-variable>
+				<ee:set-variable variableName="inputPaymentPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="6919f49c-8fa8-4bf6-bfe7-362f3bcfdad5" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"tracepoint": "TRANSFORM",&#10;	"text":"input payload as well as uri param shoping cart ID are stored in variable",&#10;	trackingId:correlationId&#10;}]'/>
+		<ee:transform doc:name="appending shopingcartId to input payment details" doc:id="1db5b6b7-56ad-4bb6-8688-849963711ce8" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="inputTransactionDetails" ><![CDATA[%dw 2.0
+output application/json
+---
+vars.inputPaymentPayload  update {
+        case shoppingCartId at .shoppingCartId! ->  vars.shoppingCartId
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="27c3901b-74c5-4fa0-96cc-3f07550af85e" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"tracepoint": "PAYLOAD-UPDATE",&#10;	"text":"payment details are updated with shopping cart id before sending to mulesoft payment gateway sys api",&#10;	trackingId:correlationId&#10;}]'/>
+		<flow-ref doc:name="paymentGatewaySystemApiCall" doc:id="103c1d13-ce34-4602-9568-5052a525c986" name="paymentGatewaySystemApiCall"/>
+		<logger level="INFO" doc:name="Logger" doc:id="dabf6c31-642e-4a41-b7c9-e61e3d744bef" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"tracepoint": "COMPLETE",&#10;	"text":"Checkout process is completed with transaction with payment gateway",&#10;	trackingId:correlationId&#10;}]'/>
+	</sub-flow>
+</mule>

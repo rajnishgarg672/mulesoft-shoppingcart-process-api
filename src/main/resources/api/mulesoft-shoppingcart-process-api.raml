@@ -1,0 +1,132 @@
+#%RAML 1.0
+title: mulesoft-shoppingcart-process-api
+version: sandbox
+
+
+types:
+  
+  Item: 
+    type: object
+    properties: 
+      productId: 
+        type: string
+        description: | 
+          Identifier of product
+      quantity:  
+        type: integer
+        description: |
+          Number of product
+        
+           
+  ShoppingCart: 
+    type: object
+    properties:
+      shoppingCardId?:
+        type: string
+        description: | 
+          Identifier of shopping cart
+      customerId?:
+        type: string
+        description: | 
+          Identifier of customer
+      items?: 
+        type: Item[]
+        description: | 
+          Items of shopping cart
+      created?: 
+        type: datetime
+        description: | 
+          timestamp of creating the shopping cart
+  paymentDetails: 
+    type: object
+    properties:
+      amount:
+        type: number
+        description: | 
+          total amount
+      currency:
+        type: string
+        description: | 
+          currency type
+      payment_method: 
+        type: object
+        properties: 
+          cardtype: string
+          fields:
+            type: object
+            properties:
+              cardnumber: 
+                type: string
+              expiration_month: 
+                type: string
+              expiration_year:
+                type: string
+              cvv:
+                type: string
+              name:
+                type: string
+/checkout/{shoppingCartId}:
+  post:
+    description: finalizing payment
+    body:
+      application/json:
+          type: paymentDetails
+          example: !include examples/payment-body.raml
+              
+    responses:
+      201:
+        body: 
+          application/json: 
+            example: 
+              {
+                "message": "payment is successfull"
+              }         
+      
+/shoppingCarts:
+  post:
+    description: Create shopping Cart
+    body:
+      application/json:
+          type: ShoppingCart[]
+          example: !include examples/shoppingcart-post-request.raml
+              
+    responses:
+      201:
+        body: 
+          application/json: 
+            example: 
+              {
+                "message": "Shopping cart has been created and posted"
+              }
+              
+  /{shoppingCartId}:                          
+    put:
+      description: Update process for shopping cart  
+      body:
+        application/json:
+          type: ShoppingCart
+          example:  !include examples/shoppingcart-put-request.raml  
+            
+                
+      responses:
+        200:
+          body: 
+            application/json: 
+              example: 
+                {
+                  "message": "Shopping cart was updated"
+                }
+            
+    delete:
+      description: Remove shopping cart
+      responses:
+        200:
+          body:
+            application/json: 
+              example: 
+                {
+                  "message": "Shopping Cart was deleted"
+                }
+
+                    
+              

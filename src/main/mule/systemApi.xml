@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="productSystemApiCall" doc:id="f7678203-fdb3-4c63-8744-e77b8cf7f631" >
+		<try doc:name="Try" doc:id="9a474aae-78eb-4db0-9a32-1aae10a8742b" >
+			<until-successful maxRetries="${requestAttempt.maxRetries}" doc:name="Until Successful" doc:id="c031822b-6611-4cbd-ba38-d46bebb55e64" millisBetweenRetries="${requestAttempt.retryInterval}">
+			<http:request method="GET" doc:name="Request" doc:id="8abbe173-1334-4415-bd80-bd8efe221d7b" config-ref="HTTP_Request_configuration_mulesoft-productsys-api" path="#[vars.configSysApi.mulesoftProductSysEndpoint ++ payload.productId]" target="productDetails" />
+		</until-successful>
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bd7ed1e6-1d24-4ce9-9dfa-fe914dd7faa1" type="ANY">
+					<ee:transform doc:name="Transform Message" doc:id="3f3dee50-92be-4837-a079-fbb6f4f4b3d2" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+message: "internal server error", 
+error: error.description,
+ trackingId:correlationId
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</sub-flow>
+	<sub-flow name="paymentGatewaySystemApiCall" doc:id="e8b432c3-af88-47ee-b5ae-14bc7272824e" >
+		<try doc:name="Try" doc:id="d39a495c-8313-4194-8826-2d64aa86c958" >
+			<http:request method="POST" doc:name="Request" doc:id="9e83d02a-70b9-4586-ae71-1db15046581c" config-ref="HTTP_Request_configuration_mulesoft-paymentsys-api" path="#[vars.configSysApi.mulesoftPaymentSysEndpoint]">
+				<http:body ><![CDATA[#[vars.inputTransactionDetails]]]></http:body>
+			</http:request>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8043b0e2-ab1e-4093-86b7-6bc32564116d" type="ANY">
+					<ee:transform doc:name="Transform Message" doc:id="fd2453ba-f31b-4bb2-ae26-56252e726f71" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+message: "internal server error", 
+error: error.description,
+ trackingId:correlationId
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</sub-flow>
+</mule>

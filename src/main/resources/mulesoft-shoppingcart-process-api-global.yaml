@@ -1,0 +1,10 @@
+requestAttempt:
+  maxRetries: "2"
+  retryInterval: "2000"
+
+
+mulesoftProductSystemApiEndpoint:
+  "searchProduct": "/api/weworkinventory?productId="
+
+mulesoftPaymentSysApiEndpoint:
+  "createPayment": "/api/payment"

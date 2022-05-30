@@ -1,0 +1,19 @@
+api:
+  id: "tbd"
+
+listener:
+  http:
+    port: "8081"
+
+
+mulesoftProductSystemApi:
+  host: "mule-worker-mulesoft-product-system-api.us-e2.cloudhub.io"
+  port: "8081"
+  username: "![KVwAwCIcWNMkoo9C7rCztIiJ3EVOnw8Ox6sjYY78nrm/mOBafu7sSA==]"
+  password: "![uWtbD0M+0RvAIQAFDFLfzbHqv9NVu0pH8USQgQxHpMHhQUlohAKWJA==]"
+  
+mulesoftPaymentGatewaySysApi:
+  host: "mule-worker-mulesoft-payment-gateway-sys-api.us-e2.cloudhub.io"
+  port: "8081"
+  username: "![KVwAwCIcWNMkoo9C7rCztIiJ3EVOnw8Ox6sjYY78nrm/mOBafu7sSA==]"
+  password: "![uWtbD0M+0RvAIQAFDFLfzbHqv9NVu0pH8USQgQxHpMHhQUlohAKWJA==]"

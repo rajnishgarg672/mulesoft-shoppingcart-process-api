@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1dde2c87-3771-4802-a8aa-66f34e1cc241" >
+		<http:listener-connection host="0.0.0.0" port="${secure::listener.http.port}" />
+	</http:listener-config>
+	<global-property doc:name="Global Property" doc:id="e3614394-09d4-4f5b-b721-c1732592f37f" name="env" value="test" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="d3dcfced-35a1-4453-9dfb-2c1895037c00" file="mulesoft-shoppingcart-process-api-${env}.yaml" key="${masterKey}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<global-property doc:name="Global Property" doc:id="37da8a8b-49ac-46ef-8d3f-7a9a8379b6f6" name="masterKey" value="useme" />
+	<configuration doc:name="Configuration" doc:id="6e3cf1ee-65aa-4e1f-99fc-fca46897f73c" defaultErrorHandler-ref="global-error-handlerError_Handler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="58d12d48-51a1-4513-833f-624c0dd004b3" file="mulesoft-shoppingcart-process-api-global.yaml" />
+     <os:object-store name="ObjectStore_Customer_Config" doc:name="ObjectStore Config" doc:id="5381c517-0978-4167-8cbf-24bd5ea58081"/>
+	<os:object-store name="ObjectStore_ShoppingCart_Config" doc:name="ObjectStore Config" doc:id="07c2fa7e-5e4a-4a2b-bc23-1e5894e5ac35"/>
+	<http:request-config name="HTTP_Request_configuration_mulesoft-productsys-api" doc:name="HTTP Request configuration" doc:id="7c94148f-06a5-42a9-8cf6-ed80fab6ad59" >
+		<http:request-connection host="#[vars.configSysApi.mulesoftProductSysHost]" port="#[vars.configSysApi.mulesoftProductSysPort]" >
+			<http:authentication >
+				<http:basic-authentication username="#[vars.configSysApi.mulesoftProductSysusername]" password="${secure::mulesoftProductSystemApi.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+		<http:request-config name="HTTP_Request_configuration_mulesoft-paymentsys-api" doc:name="HTTP Request configuration" doc:id="1affcd12-b1e2-4953-aae8-14fc07e7ef02" >
+		<http:request-connection host="#[vars.configSysApi.mulesoftPaymentSysHost]" port="#[vars.configSysApi.mulesoftPaymentSysPort]" >
+			<http:authentication >
+				<http:basic-authentication username="#[vars.configSysApi.mulesoftPaymentSysusername]" password="${secure::mulesoftPaymentGatewaySysApi.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="b6bd43d7-b5fa-40db-83b5-20e809479eca" >
+		<file:connection workingDir="#[p('app.home') ++ &quot;/systemdata&quot;]" />
+	</file:config>
+</mule>
