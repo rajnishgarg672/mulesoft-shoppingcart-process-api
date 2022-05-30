@@ -34,8 +34,5 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 			</http:authentication>
 		</http:request-connection>
 	</http:request-config>
-	<file:config name="File_Config" doc:name="File Config" doc:id="b6bd43d7-b5fa-40db-83b5-20e809479eca" >
-		<file:connection workingDir="#[p('app.home') ++ &quot;/systemdata&quot;]" />
-	</file:config>
 	<api-gateway:autodiscovery apiId="${secure::api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="7bc8cf19-1956-4685-ac0c-6bcbcb3d8d43" flowRef="mulesoft-shoppingcart-process-api-main" />
 </mule>
