@@ -1,0 +1,20 @@
+[
+  {
+    "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+    "location": "Minneapolis",
+    "quantity": 1,
+    "subscriptionMethod": "Pay as you go",
+    "unit": "Hour",
+    "amountPerquantity": 30,
+    "totalAmountToBeCharged": 30
+  },
+  {
+    "productId": "b71aaec3-7da1-4f3b-9dc1-47cfa54e2420",
+    "location": "Minneapolis",
+    "quantity": 1,
+    "subscriptionMethod": "Monthly",
+    "unit": "Month",
+    "amountPerquantity": 500,
+    "totalAmountToBeCharged": 500
+  }
+]

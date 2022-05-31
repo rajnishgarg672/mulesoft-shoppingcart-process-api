@@ -1,0 +1,19 @@
+api:
+  id: "17867220"
+
+listener:
+  http:
+    port: "8081"
+
+
+mulesoftProductSystemApi:
+  host: "localhist"
+  port: "8081"
+  username: "user"
+  password: "password"
+  
+mulesoftPaymentGatewaySysApi:
+  host: "localhost"
+  port: "8081"
+  username: "user"
+  password: "password"

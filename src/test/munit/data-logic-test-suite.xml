@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<munit:config name="data-logic-test-suite.xml" />
+	<munit:test name="data-logic-test-suite-createShoppingCartTest" doc:id="5388a92a-95f6-4d99-99a6-c22b7ef7719a" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="5c7bd319-e354-409c-ad5f-f18704a0c0a1" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayload.json', 'application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="95ecf07b-2ff4-4b3d-9b14-6e6a3f22f3db" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="e53a695c-a088-4b9f-b38d-8728c640bcd7" variableName="productDetails"/>
+			<flow-ref doc:name="Flow-ref to createShoppingCart" doc:id="fec171e3-2eef-42c6-8fd7-04116f8f70d4" name="createShoppingCart"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6481ad49-db9d-4b5a-9d0b-896cb6f7d801" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="data-logic-test-suite-createShoppingCartTest1" doc:id="29a3a110-9618-467d-ad9a-2c0c5bd00caa" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="2d2d4842-641f-42de-86d2-e7619e8c4309" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayload.json', 'application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="77b38ece-c1e1-457a-bd92-c270d2a31037" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<os:store doc:name="Store" doc:id="7f490044-98ee-410e-97d6-089df92d0df1" key='#["provider_0123456789"]'>
+				<os:value ><![CDATA[#[%dw 2.0
+output application/json
+---
+[
+  "a0849fb1-e993-42d2-bf9e-9f88ca2dbd57"
+]]]]></os:value>
+			</os:store>
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="ba9ff385-364e-45d4-b46b-b9e77352a5db" variableName="productDetails" />
+			<flow-ref doc:name="Flow-ref to createShoppingCart" doc:id="b1be2552-5d9f-4793-8d19-f89031708cba" name="createShoppingCart"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="5c53a825-d8ea-49b5-857c-52706501efd7" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="data-logic-test-suite-deleteShoppingCartTest" doc:id="6e6587b4-8eb7-4981-baec-5ea28a7cc45c" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="d4bb0332-683d-4361-8bf5-8d0f0c5f36f2" >
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '2d4cd4ee-fe3f-4276-9e73-4d76bd065e19'}}]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="bab9b78e-5b79-4fc3-b97c-a94e946ea2f8" variableName="shoppingCartId"/>
+			<flow-ref doc:name="Flow-ref to deleteShoppingCart" doc:id="6335b5f8-39d5-429a-b1b9-8dbad25d7737" name="deleteShoppingCart"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="f0cd4b97-079a-49d9-8347-3f0b8cf82711" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d817a88e-0117-41e4-b866-7595a3b1926a" actual="#[vars.httpStatus == 404]" expected="#[true]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="data-logic-test-suite-deleteShoppingCartTest1" doc:id="305da36b-ed7f-4a52-930a-867a89689b4b" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="2a2ac573-ff3d-4941-bfeb-a1be93ab4f8e" >
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': 'db53496b-cf86-42ab-989e-8cab89a63da5'}}]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="b6772c2e-33c2-4f77-8953-4c3706e486d4" variableName="shoppingCartId" />
+			<os:store doc:name="Store" doc:id="1643579b-11cb-47ef-b520-7f5e94855aa7" key='#["db53496b-cf86-42ab-989e-8cab89a63da5"]' objectStore="ObjectStore_ShoppingCart_Config">
+				<os:value><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+  "identifier": "db53496b-cf86-42ab-989e-8cab89a63da5",
+  "customerId": "provider_0123456789",
+  "items": [
+    {
+      "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+      "location": "Minneapolis",
+      "quantity": 1,
+      "subscriptionMethod": "Pay as you go",
+      "unit": "Hour",
+      "amountPerquantity": 30,
+      "totalAmountToBeCharged": 30
+    }
+  ],
+  "created": "2022-05-30T21:04:39.089-05:00"
+}]]]></os:value>
+			</os:store>
+			<os:store doc:name="Store" doc:id="8db43bef-a9cd-4f8e-8997-ff4cabd1a531" key='#["provider_0123456789"]'>
+				<os:value ><![CDATA[#[%dw 2.0
+output application/json
+---
+[
+  "f91dcfb7-b76d-424b-a6ef-6b8c3cd73780",
+  "a0849fb1-e993-42d2-bf9e-9f88ca2dbd57",
+  "556ea9f5-5b8a-44d3-bf79-7d140b37639c",
+  "db53496b-cf86-42ab-989e-8cab89a63da5"
+]]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to deleteShoppingCart" doc:id="4475506f-dd61-45c1-a915-53d7bdffd4a9" name="deleteShoppingCart"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="763645f3-7fd1-4a82-9845-8f68f484cff1" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="Copy_of_data-logic-test-suite-deleteShoppingCartTest1" doc:id="59c73b83-58ab-490c-b04a-55ae630f3aab" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="d674533e-1456-420f-a3ec-18be79a36b04" >
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': 'db53496b-cf86-42ab-989e-8cab89a63da5'}}]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="bae9c77f-e233-4de5-a046-790fc5d25297" variableName="shoppingCartId" />
+			<os:store doc:name="Store" doc:id="30f89602-6ce4-4d56-81ea-60093f3537d1" key='#["db53496b-cf86-42ab-989e-8cab89a63da5"]' objectStore="ObjectStore_ShoppingCart_Config" >
+				<os:value ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+  "identifier": "db53496b-cf86-42ab-989e-8cab89a63da5",
+  "customerId": "provider_0123456789",
+  "items": [
+    {
+      "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+      "location": "Minneapolis",
+      "quantity": 1,
+      "subscriptionMethod": "Pay as you go",
+      "unit": "Hour",
+      "amountPerquantity": 30,
+      "totalAmountToBeCharged": 30
+    }
+  ],
+  "created": "2022-05-30T21:04:39.089-05:00"
+}]]]></os:value>
+			</os:store>
+			<os:store doc:name="Store" doc:id="3c8cb461-08da-4335-8757-fde6abccd1e4" key='#["provider_0123456789"]' >
+				<os:value ><![CDATA[#[%dw 2.0
+output application/json
+---
+[]]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to deleteShoppingCart" doc:id="8539fad5-516a-487a-b2a1-3ee070d6df31" name="deleteShoppingCart" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="32821bd5-66a5-4fb9-973e-35f480183f03" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="data-logic-test-suite-updateShoppingCartTest" doc:id="ce65b174-9024-48d4-b1f7-5ca16f5a43f3" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="d019080b-ff8f-4210-95ce-00e244306a32" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayloadPut.json', 'application/json')]" mediaType="application/json" />
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1'}}]" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="70ab1111-7ffd-4d33-8e7c-019da56c7839" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="d40f5edb-44db-49d3-b2e2-d708074e2167" variableName="productDetails" />
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="6b18450b-1b9f-46da-9eeb-23bbe5bc334d" variableName="shoppingCartId" />
+			<os:store doc:name="Store" doc:id="c3b0b21a-8df7-4fa4-ab40-fc1872247c30" objectStore="ObjectStore_ShoppingCart_Config" key='#["5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1"]'>
+				<os:value ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+  "identifier": "5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1",
+  "customerId": "provider_0123456789",
+  "items": [
+    {
+      "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+      "location": "Minneapolis",
+      "quantity": 1,
+      "subscriptionMethod": "Pay as you go",
+      "unit": "Hour",
+      "amountPerquantity": 30,
+      "totalAmountToBeCharged": 30
+    }
+  ],
+  "created": "2022-05-30T22:08:40.974-05:00"
+}]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to updateShoppingCart" doc:id="44c5eebb-e2d6-4ce0-9304-572ee1811531" name="updateShoppingCart"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="967d2b98-4462-4af4-8695-836cb8488f9c" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+			<os:remove doc:name="Remove" doc:id="df884b79-15e2-4076-93ed-8e1ed7b9cdf9" key='#["5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1"]' objectStore="ObjectStore_ShoppingCart_Config"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="data-logic-test-suite-updateShoppingCartTest-second-scenario" doc:id="1a78b9d4-4777-42c4-9f38-6cad267c598a" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="570f3e2f-5505-4fa4-9fb0-c52fe4259207" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayloadPut.json', 'application/json')]" mediaType="application/json" />
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1'}}]" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4193a037-1796-4d24-a99b-158c9a75f02a" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="4e033fe3-3d90-4bcc-bf8d-3137fd1f2cab" variableName="productDetails" />
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="462ad229-e7fc-4b41-a223-88ddb69f793d" variableName="shoppingCartId" />
+			<flow-ref doc:name="Flow-ref to updateShoppingCart" doc:id="3208979e-7ba7-4422-a5e4-d640bd2cbdb7" name="updateShoppingCart" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b3a7fa2e-81a6-43e3-ad3b-3fcde999acbb" actual="#[vars.httpStatus == 404]" expected="#[true]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="9b821ee9-2cc3-4c02-8a2f-0abbe37800a5" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+
+</mule>

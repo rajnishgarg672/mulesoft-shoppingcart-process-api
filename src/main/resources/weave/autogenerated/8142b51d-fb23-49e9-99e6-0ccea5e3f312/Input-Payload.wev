@@ -1,0 +1,6 @@
+%dw 2.0
+
+type auto_8142b51d_fb23_49e9_99e6_0ccea5e3f312_Input_Payload = Array<{  created?: String,   customerId?: String,   shoppingCardId?: String,   items?: Array<{    quantity: Number,     productId: String,     _?: Any  }> {"description": "Items of shopping cart\n"}, 
+  _?: Any
+}>
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="checkout-implementation-logic-test-suite.xml" />
+	<munit:test name="checkout-implementation-logic-test-suite-checkout-implementation-logicTest" doc:id="01550f96-3ab1-4676-b90f-592f70af3b83" description="Test">
+		<munit:behavior>
+			<munit:set-event doc:name="Set Event" doc:id="1ad42ece-fa9e-438b-b387-e266e3674ed6" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/paymentFile.json', 'application/json')]" mediaType="application/json" />
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '04a34dc0-9c3a-4cf2-9ffb-1ad66a72b686'}}]" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4f9d616e-e5aa-4b54-bea5-21732c0410ea" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="paymentGatewaySystemApiCall" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://testfiles/paymentApproved.json', 'application/json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[attributes.uriParams.'shoppingCartId']" doc:name="Set Variable" doc:id="4ebca2c5-5682-4696-b04a-69d006195f4a" variableName="shoppingCartId" />
+			<flow-ref doc:name="Flow-ref to checkout-implementation-logic" doc:id="528f1615-76de-4e8e-85d1-b25fddc255e4" name="checkout-implementation-logic"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="c2f6dda5-f71d-4ef6-a3f4-8bad9272f3e5" actual="#[payload]" expected='#[{&#10;"message":"payment is authorized and successful",&#10;"status": "APPROVED"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

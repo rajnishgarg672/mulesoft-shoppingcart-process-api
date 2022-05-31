@@ -24,21 +24,6 @@
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="mulesoft-shoppingcart-process-api-config" />
-        <error-handler>
-            <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform>
-                    <ee:message>
-                        <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
-                    </ee:message>
-                    <ee:variables>
-                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
-                    </ee:variables>
-                </ee:transform>
-            </on-error-propagate>
-        </error-handler>
     </flow>
     <flow name="put:\shoppingCarts\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config">
         <flow-ref doc:name="update shopping cart based on shoppingcartId" doc:id="3b55df38-7a9f-49ff-8e93-2ad62bb07756" name="updateShoppingCart" />

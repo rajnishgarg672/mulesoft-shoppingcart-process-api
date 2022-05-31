@@ -1,0 +1,12 @@
+{
+	"mulesoftProductSysHost": "localhost",
+	"mulesoftProductSysPort":"8082",
+	"mulesoftProductSysusername":"username",
+	"mulesoftProductSyspassword":"password",
+	"mulesoftProductSysEndpoint":"/api/weworkinventory?productId=a0ebf1a4-90a5-4be5-a171-061db814e174",
+	"mulesoftPaymentSysHost": "localhost",
+	"mulesoftPaymentSysPort":"8082",
+	"mulesoftPaymentSysusername":"username",
+	"mulesoftPaymentSyspassword":"password",
+	"mulesoftPaymentSysEndpoint":"/api/payment"
+}

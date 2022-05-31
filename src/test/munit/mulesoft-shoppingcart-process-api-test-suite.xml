@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="mulesoft-shoppingcart-process-api-test-suite.xml" />
+	<munit:test name="mulesoft-shoppingcart-process-api-test-suite-post:\checkout\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-configTest" doc:id="0804a938-4462-4ff1-81a4-9e2be1ffa422" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="69137cff-98ea-466f-8a88-0251188d4703" processor="sub-flow">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="checkout-implementation-logic" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1b81c4eb-dff1-4ac1-885b-1d027744fb3e" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://testfiles/paymentApproved.json', 'application/json')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a0fc970d-808e-48c8-97ee-8cccd0a0c070" >
+				<munit:payload value="#[read(MunitTools::getResourceAsString('testfiles/paymentFile.json'),'text/plain')]" />
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '04a34dc0-9c3a-4cf2-9ffb-1ad66a72b686'}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\checkout\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config" doc:id="919982b2-4326-4eb5-86fd-6f259fd91090" name="post:\checkout\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="3c2db179-8a6c-403c-a964-1d3f072384eb" is="#[MunitTools::equalTo(read(MunitTools::getResourceAsString('testfiles/finalResponse.json'),'application/json'))]" expression='#[output application/json --- read(payload,"application/json")]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mulesoft-shoppingcart-process-api-test-suite-post:\shoppingCarts:application\json:mulesoft-shoppingcart-process-api-configTest" doc:id="922f7dc8-bcdf-4b0f-806d-8394b329cbe8" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="114f9daf-1025-4898-8fd0-1ef579a50c0d">
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayload.json', 'application/json')]" mediaType="application/json" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7e58e3e3-5aea-4f0c-88dd-47d3addcfc90" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="acad9814-177f-4042-930b-e30aabf89a1b" variableName="productDetails" />
+			<os:store doc:name="Store" doc:id="4a47c1a8-d944-4f9f-8232-c86638557a9d" key='#["provider_0123456789"]'>
+				<os:value><![CDATA[#[%dw 2.0
+output application/json
+---
+[
+  "a0849fb1-e993-42d2-bf9e-9f88ca2dbd57"
+]]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to post:\shoppingCarts:application\json:mulesoft-shoppingcart-process-api-config" doc:id="89614954-b645-473e-bdc5-3dc254ab91fb" name="post:\shoppingCarts:application\json:mulesoft-shoppingcart-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="cbda00c5-5a9f-4fd0-b7a2-22e204c97d29" is='#[MunitTools::containsString("Shopping Cart was created")]' expression="#[payload.message]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mulesoft-shoppingcart-process-api-test-suite-put:\shoppingCarts\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-configTest" doc:id="886ab493-3ad0-45aa-be92-c92577d95146" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="5e7fccd0-62ff-4624-a5d1-5ca231ba582a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://testfiles/inputPayloadPut.json', 'application/json')]" mediaType="application/json" />
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': '5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1'}}]" />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="510159b1-cb6b-4819-b759-f339d368b32b" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[output application/json --- readUrl('classpath://testfiles/outputSys.json', 'application/json')]" doc:name="Set Variable" doc:id="6f522782-3f98-4042-b87e-f7594ab24c64" variableName="productDetails" />
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="d496a3da-df81-4e48-bca0-c849c8ce7ec6" variableName="shoppingCartId" />
+			<os:store doc:name="Store" doc:id="caaab2ec-ce63-47a7-aa62-6345fab88897" key='#["5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1"]' objectStore="ObjectStore_ShoppingCart_Config">
+				<os:value><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+  "identifier": "5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1",
+  "customerId": "provider_0123456789",
+  "items": [
+    {
+      "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+      "location": "Minneapolis",
+      "quantity": 1,
+      "subscriptionMethod": "Pay as you go",
+      "unit": "Hour",
+      "amountPerquantity": 30,
+      "totalAmountToBeCharged": 30
+    }
+  ],
+  "created": "2022-05-30T22:08:40.974-05:00"
+}]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to put:\shoppingCarts\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config" doc:id="a893e8e4-7417-4d72-96f5-f06e17fb6ebb" name="put:\shoppingCarts\(shoppingCartId):application\json:mulesoft-shoppingcart-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8c32756a-fc7b-46b6-9a07-682ca6186c85" is='#[MunitTools::containsString("Shopping cart was updated")]' expression="#[payload.message]"/>
+			<os:remove doc:name="Remove" doc:id="4ca43b38-4fd1-4fca-9594-57aeb9f2c25d" key='#["5e67099a-a9af-4ef8-b58e-8aa5ca4fe8a1"]' objectStore="ObjectStore_ShoppingCart_Config" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mulesoft-shoppingcart-process-api-test-suite-delete:\shoppingCarts\(shoppingCartId):mulesoft-shoppingcart-process-api-configTest" doc:id="b7f9c8bb-322a-45ce-b6fe-a46ac7a93ef9" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Event" doc:id="f9969717-686a-4bfd-83df-74c1d02a1d12" >
+				<munit:attributes value="#[{uriParams: {'shoppingCartId': 'db53496b-cf86-42ab-989e-8cab89a63da5'}}]" mediaType="application/java" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<set-variable value="#[attributes.uriParams.shoppingCartId]" doc:name="Set Variable" doc:id="580ec616-bbd5-4c42-b460-88d297760c97" variableName="shoppingCartId" />
+			<os:store doc:name="Store" doc:id="37e52745-62ec-4835-ade0-080d3982a567" key='#["db53496b-cf86-42ab-989e-8cab89a63da5"]' objectStore="ObjectStore_ShoppingCart_Config">
+				<os:value><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+  "identifier": "db53496b-cf86-42ab-989e-8cab89a63da5",
+  "customerId": "provider_0123456789",
+  "items": [
+    {
+      "productId": "a0ebf1a4-90a5-4be5-a171-061db814e174",
+      "location": "Minneapolis",
+      "quantity": 1,
+      "subscriptionMethod": "Pay as you go",
+      "unit": "Hour",
+      "amountPerquantity": 30,
+      "totalAmountToBeCharged": 30
+    }
+  ],
+  "created": "2022-05-30T21:04:39.089-05:00"
+}]]]></os:value>
+			</os:store>
+			<os:store doc:name="Store" doc:id="08d0faab-e9d6-41d1-9dfa-0df137bff452" key='#["provider_0123456789"]'>
+				<os:value><![CDATA[#[%dw 2.0
+output application/json
+---
+[]]]]></os:value>
+			</os:store>
+			<flow-ref doc:name="Flow-ref to delete:\shoppingCarts\(shoppingCartId):mulesoft-shoppingcart-process-api-config" doc:id="92407625-b6a3-4fec-b53a-9842bbb54de7" name="delete:\shoppingCarts\(shoppingCartId):mulesoft-shoppingcart-process-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="40f31d09-3111-4fc2-bcdf-7c53c41c3fd0" is='#[MunitTools::containsString("Shopping Cart was deleted")]' expression="#[payload.message]"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>
