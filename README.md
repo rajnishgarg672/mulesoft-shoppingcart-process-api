@@ -6,7 +6,7 @@
 + [Run it!](#runit)
 	* [Running on Studio](#runonstudio)
 	* [Running on CloudHub](#runoncloudhub)
-	* [### Note]
+	* [Note](### Note)
 	
 
 
