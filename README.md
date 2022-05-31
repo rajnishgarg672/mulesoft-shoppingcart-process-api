@@ -6,7 +6,7 @@
 + [Run it!](#runit)
 	* [Running on Studio](#runonstudio)
 	* [Running on CloudHub](#runoncloudhub)
-	* [Note](### Note)
+	* [Note](### RequiredDetails to run on local and cloudhub)
 	
 
 
@@ -79,5 +79,5 @@ anypoint.platform.client_secret=*********************************
 anypoint.platform.config.analytics.agent.enabled=false
 env=sandbox
 
-### Note
+### Note <a name="RequiredDetails to run on local and cloudhub"/>
 Please refer Rajnish_ShoppingCart_project.pdf for details on masterKey as well as other credetails required to run in local as well as on cloudhub
