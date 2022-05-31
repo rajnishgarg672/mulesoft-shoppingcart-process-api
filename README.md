@@ -4,9 +4,7 @@
 + [Considerations](#considerations)
 	* [APIs security considerations](#apissecurityconsiderations)
 + [Run it!](#runit)
-	* [Running on premise](#runonopremise)
 	* [Running on Studio](#runonstudio)
-	* [Running on Mule ESB stand alone](#runonmuleesbstandalone)
 	* [Running on CloudHub](#runoncloudhub)
 	* [Deploying your Anypoint Template on CloudHub](#deployingyouranypointtemplateoncloudhub)
 	* [Properties to be configured (With examples)](#propertiestobeconfigured)
@@ -15,7 +13,7 @@
 # Use Case <a name="usecase"/>
 
 As a Customer I want API to cover Shopping Cart functionality. 
-The API provides endpoints for posting to the shopping cart, updating, deleting shopping cart. The details about product in shopping cart is fetch from the mulesoft-product-system-api. 
+The API provides endpoints for posting to the shopping cart, updating, deleting shopping cart and checkout. The details about product in shopping cart is fetch from the mulesoft-product-system-api.And checkout in mulesoft-shoppingcart-process-api is done by mulesoft-payment-gateway-sys-api.
 
 ### POST/shoppingCarts/
 This endpoint will trigger flow createShoppingCart which creates shopping cart to Object Store for customer 
@@ -27,7 +25,8 @@ This endpoint will trigger flow getShoppingCart which updates shopping cart from
 ### DELETE/shoppingCarts/{shoppingCartId}
 This endpoint will trigger flow deleteShoppingCart which removes shopping cart by shoppingCartId.
 
-  
+### POST/checkout/{shoppingCartId}
+This endpoint will trigger flow checkout-implementation-logic which complete checkout experience by interacting with mulesoft-payment-gateway-sys-api for simulating dummy payment gateway.  
 
 # Considerations <a name="considerations"/>
 
@@ -48,7 +47,7 @@ Here are few tips to download Anypoint Studio.
 + You can download Mule Studio from this [Location](https://www.mulesoft.com/lp/dl/studio)
 
 
-### Importing an Anypoint Template into Studio
+### Importing an mulesoft-shoppingcart-process-api into Studio
 Anypoint Studio offers several ways to import a project into the workspace, for example: 
 
 + Anypoint Studio Project from File System
@@ -66,7 +65,7 @@ Once you have imported you mulesoft-shoppingcart-process-api into Anypoint Studi
 + Click on Enviromet tab.
 + click on Add.
 + Set new environment variable as "Name" : env and "Value" : sandbox
-+ Set new environment variable as "Name" : masterKey and "Value" : placeholder
++ Set new environment variable as "Name" : masterKey and "Value" : *********************************
 
 
 ## Running on CloudHub <a name="runoncloudhub"/>
@@ -80,3 +79,5 @@ anypoint.platform.client_secret=*********************************
 anypoint.platform.config.analytics.agent.enabled=false
 env=sandbox
 
+### Note
+Please refer Rajnish_ShoppingCart_project.pdf for details on masterKey as well as other credetails required to run in local as well as on cloudhub
