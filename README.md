@@ -55,10 +55,9 @@ Anypoint Studio offers several ways to import a project into the workspace, for 
 
 
 ### Running on Studio <a name="runonstudio"/>
-Once you have imported you mulesoft-shoppingcart-process-api into Anypoint Studio you need to follow these steps to run it:
+Once you have imported  mulesoft-shoppingcart-process-api into Anypoint Studio you need to follow these steps to run it:
 
-+ Locate the properties file `mulesoft-shoppingcart-process-api-<env>.properties`, in src/main/mule/resources
-+ Complete all the properties required as per the examples in the section [Properties to be configured](#propertiestobeconfigured)
++ Locate the properties file `mulesoft-shoppingcart-process-api-<env>.properties`, in src/main/mule/resources we need to decrypt any credetials using masterKey
 + Once that is done, right click on you Anypoint mulesoft-shoppingcart-process-api project folder 
 + Hover you mouse over `"Run as"`
 + Click on  `"Mule Application(configure)"`.
