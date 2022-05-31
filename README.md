@@ -59,7 +59,7 @@ Once you have imported you mulesoft-shoppingcart-process-api into Anypoint Studi
 
 + Locate the properties file `mulesoft-shoppingcart-process-api-<env>.properties`, in src/main/mule/resources
 + Complete all the properties required as per the examples in the section [Properties to be configured](#propertiestobeconfigured)
-+ Once that is done, right click on you Anypoint Template project folder 
++ Once that is done, right click on you Anypoint mulesoft-shoppingcart-process-api project folder 
 + Hover you mouse over `"Run as"`
 + Click on  `"Mule Application(configure)"`.
 + Click on Enviromet tab.
