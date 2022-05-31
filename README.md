@@ -6,8 +6,8 @@
 + [Run it!](#runit)
 	* [Running on Studio](#runonstudio)
 	* [Running on CloudHub](#runoncloudhub)
-	* [Deploying your mulesoft-shoppingcart-process-api on CloudHub](#deployingyourmulesoft-shoppingcart-process-apioncloudhub)
-	* [Properties to be configured (With examples)](#propertiestobeconfigured)
+	* [### Note]
+	
 
 
 # Use Case <a name="usecase"/>
